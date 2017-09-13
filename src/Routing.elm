@@ -1,8 +1,9 @@
 module Routing exposing (..)
 
-import Navigation exposing (Location)
 import Models exposing (JobId, Route(..))
+import Navigation exposing (Location)
 import UrlParser exposing (..)
+
 
 matchers : Parser (Route -> a) a
 matchers =
@@ -14,7 +15,7 @@ matchers =
 
 parseLocation : Location -> Route
 parseLocation location =
-    case (parseHash matchers location) of
+    case parseHash matchers location of
         Just route ->
             route
 
@@ -24,4 +25,4 @@ parseLocation location =
 
 jobPath : JobId -> String
 jobPath id =
-  "#/job/" ++ id
+    "#/job/" ++ id

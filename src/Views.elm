@@ -1,110 +1,119 @@
 module Views exposing (..)
 
-import Html exposing (Html, text, div, img, h1, a, i, img)
-import Html.Attributes exposing (class, href, src)
-import Html.Attributes exposing (src, style)
-
-import Material.Layout as Layout
-import Material.Scheme as Scheme
-import Material.Color as Color
+import Html exposing (Html, a, div, h1, i, img, text)
+import Html.Attributes exposing (class, href, src, style)
 import Material.Button as Button
+import Material.Color as Color
 import Material.Icon as Icon
+import Material.Layout as Layout
 import Material.Options as Options
+import Material.Scheme as Scheme
 import Material.Table as Table
-
 import Models exposing (..)
 import Msgs exposing (..)
 
-logo: Html Msg
+
+logo : Html Msg
 logo =
     img
-        [ style [ ( "height" , "65px" ) , ( "margin-right" , "10px" ) , ( "margin-top" , "-10px" ) ], src "quartic.svg" ]
+        [ style [ ( "height", "65px" ), ( "margin-right", "10px" ), ( "margin-top", "-10px" ) ], src "quartic.svg" ]
         []
 
-header: Model -> List (Html Msg)
-header model = [
-  h1
-     [ style [ ("padding" , "15px") , ("text-align", "left") , ( "margin" , "0px" ) ] ]
-     [ logo
-     , text "Qube Console"]
-  ]
 
-jobLink: String -> Html Msg
+header : Model -> List (Html Msg)
+header model =
+    [ h1
+        [ style [ ( "padding", "15px" ), ( "text-align", "left" ), ( "margin", "0px" ) ] ]
+        [ logo
+        , text "Qube Console"
+        ]
+    ]
+
+
+jobLink : String -> Html Msg
 jobLink id =
     a
-      [ class "btn regular"
-      , href ("#/job/" ++ id)
-      ]
-      [ i [ class "fa fa-pencil mr1" ] [], text id ]
+        [ class "btn regular"
+        , href ("#/job/" ++ id)
+        ]
+        [ i [ class "fa fa-pencil mr1" ] [], text id ]
 
-jobsTable: Model -> Html Msg
+
+jobsTable : Model -> Html Msg
 jobsTable model =
     div
-      [ style [ ( "padding", "20px" ) ] ]
-      [
-         Table.table []
-        [ Table.thead []
-          [ Table.tr []
-            [ Table.th [] [ text "Id" ]
-            , Table.th [] [ text "Client" ]
-            , Table.th [] [ text "Name" ]
-            , Table.th [] [ text "Create Spec" ]
-            , Table.th [] [ text "Start Time" ]
-            , Table.th [] [ text "End Time" ]
+        [ style [ ( "padding", "20px" ) ] ]
+        [ Table.table []
+            [ Table.thead []
+                [ Table.tr []
+                    [ Table.th [] [ text "Id" ]
+                    , Table.th [] [ text "Client" ]
+                    , Table.th [] [ text "Name" ]
+                    , Table.th [] [ text "Create Spec" ]
+                    , Table.th [] [ text "Start Time" ]
+                    , Table.th [] [ text "End Time" ]
+                    ]
+                ]
+            , Table.tbody []
+                (model.jobs
+                    |> List.map
+                        (\job ->
+                            Table.tr []
+                                [ Table.td [] [ jobLink job.id ]
+                                , Table.td [] [ text job.client ]
+                                , Table.td [] [ text job.name ]
+                                , Table.td [] [ job.createSpec |> toString |> text ]
+                                , Table.td [] [ job.startTime |> toString |> text ]
+                                , Table.td [] [ job.endTime |> toString |> text ]
+                                ]
+                        )
+                )
             ]
-          ]
-        , Table.tbody []
-            (model.jobs |> List.map (\job ->
-               Table.tr []
-                 [ Table.td [] [ jobLink job.id ]
-                 , Table.td [] [ text job.client ]
-                 , Table.td [] [ text job.name ]
-                 , Table.td [] [ job.createSpec |> toString |> text ]
-                 , Table.td [] [ job.startTime |> toString |> text ]
-                 , Table.td [] [ job.endTime |> toString |> text ]
-                 ]
-               )
-            )
         ]
 
-      ]
 
 refreshButton : Model -> Html Msg
 refreshButton model =
     div
-      [ style [ ( "float", "right" ) , ( "padding" , "20px" ) ] ]
-      [ Button.render Mdl [0] model.mdl
-        [ Button.fab
-          , Button.colored
-          , Options.onClick MyClickMsg
+        [ style [ ( "float", "right" ), ( "padding", "20px" ) ] ]
+        [ Button.render Mdl
+            [ 0 ]
+            model.mdl
+            [ Button.fab
+            , Button.colored
+            , Options.onClick MyClickMsg
+            ]
+            [ Icon.i "cached" ]
         ]
-        [ Icon.i "cached"]
-      ]
+
 
 view : Model -> Html Msg
 view model =
     div
-        [ style [ ( "display" , "flex" ) , ( "flex-direction" , "column" ) ] ]
+        [ style [ ( "display", "flex" ), ( "flex-direction", "column" ) ] ]
         [ div
             []
-            [ refreshButton model , jobsTable model ]
+            [ refreshButton model, jobsTable model ]
         ]
+
 
 view_ : Model -> Html Msg
 view_ model =
     div []
-    [ Scheme.topWithScheme Color.Pink Color.DeepPurple
-      (Layout.render Mdl
-        model.mdl
-        [ Layout.fixedHeader
+        [ Scheme.topWithScheme Color.Pink
+            Color.DeepPurple
+            (Layout.render Mdl
+                model.mdl
+                [ Layout.fixedHeader
+                ]
+                { header = header model
+                , drawer = []
+                , tabs = ( [], [] )
+                , main = [ div [] [ page model ] ]
+                }
+            )
         ]
-        { header = header model
-        , drawer = []
-        , tabs =  ([], [])
-        , main = [ div [] [page model] ]
-        }
-      )
-    ]
+
 
 notFoundView : Html msg
 notFoundView =
@@ -112,12 +121,12 @@ notFoundView =
         [ text "Not found"
         ]
 
+
 jobView : JobId -> Html msg
 jobView id =
     div []
         [ id |> text
         ]
-
 
 
 page : Model -> Html Msg
@@ -127,8 +136,7 @@ page model =
             view model
 
         Models.JobRoute id ->
-          jobView id
+            jobView id
 
         Models.NotFoundRoute ->
-          notFoundView
-
+            notFoundView

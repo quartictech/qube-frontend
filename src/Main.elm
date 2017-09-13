@@ -1,13 +1,14 @@
 module Main exposing (..)
 
-import Navigation exposing (Location)
-
 import Models exposing (..)
-import Routing
 import Msgs exposing (..)
-import Views exposing(view_)
+import Navigation exposing (Location)
+import Routing
+import Views exposing (view_)
+
 
 ---- MODEL ----
+
 
 init : Location -> ( Model, Cmd Msg )
 init location =
@@ -15,7 +16,8 @@ init location =
         currentRoute =
             Routing.parseLocation location
     in
-        ( initialModel currentRoute, Cmd.none )
+    ( initialModel currentRoute, Cmd.none )
+
 
 
 ---- UPDATE ----
@@ -24,13 +26,16 @@ init location =
 update : Msg -> Model -> ( Model, Cmd Msg )
 update msg model =
     case msg of
-      Msgs.OnLocationChange location ->
-          let
-              newRoute =
-                  Routing.parseLocation location
-          in
-              ( { model | route = newRoute }, Cmd.none )
-      _ -> ( model, Cmd.none )
+        Msgs.OnLocationChange location ->
+            let
+                newRoute =
+                    Routing.parseLocation location
+            in
+            ( { model | route = newRoute }, Cmd.none )
+
+        _ ->
+            ( model, Cmd.none )
+
 
 
 ---- PROGRAM ----
