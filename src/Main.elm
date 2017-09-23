@@ -6,6 +6,8 @@ import Navigation exposing (Location)
 import Routing
 import Views exposing (view_)
 
+import Api exposing (getClients)
+
 
 ---- MODEL ----
 
@@ -16,7 +18,7 @@ init location =
         currentRoute =
             Routing.parseLocation location
     in
-    ( initialModel currentRoute, Cmd.none )
+    ( initialModel currentRoute, getClients)
 
 
 
@@ -32,6 +34,9 @@ update msg model =
                     Routing.parseLocation location
             in
             ( { model | route = newRoute }, Cmd.none )
+
+        Msgs.LoadJobs (Ok newClients) ->
+            ( { model | clients = newClients }, Cmd.none)
 
         _ ->
             ( model, Cmd.none )

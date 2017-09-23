@@ -1,6 +1,6 @@
 module Views exposing (..)
 
-import Html exposing (Html, a, div, h1, i, img, text)
+import Html exposing (Html, a, div, h1, i, img, text, small)
 import Html.Attributes exposing (class, href, src, style)
 import Material.Button as Button
 import Material.Color as Color
@@ -16,7 +16,7 @@ import Msgs exposing (..)
 logo : Html Msg
 logo =
     img
-        [ style [ ( "height", "65px" ), ( "margin-right", "10px" ), ( "margin-top", "-10px" ) ], src "quartic.svg" ]
+        [ style [ ( "height", "65px" ), ( "margin-right", "10px" ), ( "margin-top", "-10px" ) ], src "%PUBLIC_URL%/quartic.svg" ]
         []
 
 
@@ -27,6 +27,8 @@ header model =
         [ logo
         , text "Qube Console"
         ]
+        , small [] 
+                [text ("(" ++ toString (List.length model.clients) ++ " client(s) connected)")]
     ]
 
 

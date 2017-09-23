@@ -23,6 +23,7 @@ defaultJobs =
 type alias Model =
     { mdl : Material.Model
     , jobs : List Job
+    , clients: List String
     , route : Route
     }
 
@@ -31,6 +32,7 @@ initialModel : Route -> Model
 initialModel route =
     { mdl = Material.model
     , jobs = defaultJobs
+    , clients = []
     , route = route
     }
 
